@@ -31,14 +31,53 @@ exports.readListOfUrls = function(callback){
   })
 };
 
-exports.isUrlInList = function(){
+exports.isUrlInList = function(url){
+
+  // exports.readListOfUrls(function(data) {
+  //   for (var i = 0; i < data.length; i++) {
+  //     if (url === data[i]) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // })
+
+
+  var string = fs.readFileSync(exports.paths.list, 'utf8');
+  var array = string.split('\n');
+  var found = false;
+  _.each(array, function(element, index){
+    if (url === element) {
+      found = true;
+    }
+  })
+  return found;
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(url){
+  if(!exports.isUrlInList()){
+    exports.readListOfUrls(function(data){
+      fs.writeFileSync(exports.paths.list, data.join('\n') + url + '\n');
+    })
+  }
 };
 
-exports.isURLArchived = function(){
+exports.isURLArchived = function(url){
+  return fs.existsSync(exports.paths.archivedSites + '/' + url);
 };
+
+exports.returnArchivedURL = function(url) {
+  if(exports.isURLArchived){
+    return fs.readFileSync(exports.paths.archivedSites + '/' + url, 'utf8')
+  } else {
+    return null;
+  }
+}
 
 exports.downloadUrls = function(){
+  return exports.readListOfUrls(function(data) {
+    _.map(data, function(element){
+
+    })
+  })
 };
