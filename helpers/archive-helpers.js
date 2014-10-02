@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var httpget = require('http-get');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -75,9 +76,18 @@ exports.returnArchivedURL = function(url) {
 }
 
 exports.downloadUrls = function(){
-  return exports.readListOfUrls(function(data) {
+  exports.readListOfUrls(function(data) {
     _.map(data, function(element){
-
+      if (element !== '') {
+        console.log(element)
+        httpget.get(element, exports.paths.archivedSites + '/' + element, function (err, res) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          //console.log(res.code, res.headers, res.buffer.toString());
+        });
+      }
     })
   })
 };

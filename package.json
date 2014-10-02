@@ -5,7 +5,8 @@
   "author": "Hack Reactor",
   "license": "Copyright 2013, Hack Reactor. All rights reserved.",
   "dependencies": {
-    "express": "^4.9.5"
+    "express": "^4.9.5",
+    "http-request": "^0.6.3"
   },
   "devDependencies": {
     "chai": "^1.9.0",
