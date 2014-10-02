@@ -26,11 +26,14 @@ describe("Node Server Request Listener Function", function() {
   it("Should answer GET requests for /", function(done) {
     var req = new stubs.Request("/", "GET");
 
+    //console.log(req);
+
     handler.handleRequest(req, res);
 
     waitForThen(
       function() { return res._ended; },
       function(){
+        //console.log("RESPONSE:", res);
         expect(res._responseCode).to.equal(200);
         expect(res._data.toString().match(/<input/)).to.be.ok; // the resulting html should have an input tag
         done();
@@ -55,7 +58,7 @@ describe("Node Server Request Listener Function", function() {
   it("Should append submitted sites to 'sites.txt'", function(done) {
     var url = "www.example.com";
     var req = new stubs.Request("/", "POST", {url: url});
-
+    console.log('REQUEST', req)
     // Reset the test file and process request
     fs.writeFileSync(archive.paths.list, "");
     handler.handleRequest(req, res);
@@ -88,7 +91,7 @@ describe("Node Server Request Listener Function", function() {
 describe("html fetcher helpers", function(){
 
   it("should have a 'readListOfUrls' function", function(done){
-    var urlArray = ["example1.com", "example2.com"];
+    var urlArray = ["example1.com", "example2.com", "www.google.com"];
     var resultArray;
 
     fs.writeFileSync(archive.paths.list, urlArray.join("\n"));
