@@ -14,9 +14,15 @@ exports.handleRequest = function (req, res) {
   }
 };
 
-console.log("GOOGLE.COM THERE???", archive.isUrlInList('www.google.com'));
-console.log('Google.com archived??', archive.isURLArchived('www.google.com'));
-console.log('yahoo.com archived??', archive.isURLArchived('www.yahoo.com'));
+archive.isUrlInList('www.google.com', function(found) {
+  if (found) {
+    console.log('GOOGLE.com FOUND');
+  } else {
+    console.log('GOOGLE.COM NOT FOUND');
+  }
+});
+// console.log('Google.com archived??', archive.isURLArchived('www.google.com'));
+// console.log('yahoo.com archived??', archive.isURLArchived('www.yahoo.com'));
 
 var router = {
   'GET': function(req, res) {
@@ -46,12 +52,15 @@ var router = {
       console.log('POSTed: ' + body);
       archiveSite = body.slice(4);
       console.log('URL:' + archiveSite);
-      if(!archive.isUrlInList(archiveSite)){
-        console.log("adding");
-        archive.addUrlToList(archiveSite);
-      }
-      res.writeHead(302);
-      res.end();
+      archive.isUrlInList(archiveSite, function(found){
+        console.log('callback');
+        if (!found) {
+          console.log("adding");
+          archive.addUrlToList(archiveSite);
+        }
+        res.writeHead(302);
+        res.end();
+      });
     });
 
 

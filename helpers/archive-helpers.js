@@ -32,35 +32,38 @@ exports.readListOfUrls = function(callback){
   })
 };
 
-exports.isUrlInList = function(url){
-
-  // exports.readListOfUrls(function(data) {
-  //   for (var i = 0; i < data.length; i++) {
-  //     if (url === data[i]) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // })
-
-
-  var string = fs.readFileSync(exports.paths.list, 'utf8');
-  var array = string.split('\n');
-  var found = false;
-  _.each(array, function(element, index){
-    if (url === element) {
-      found = true;
+exports.isUrlInList = function(url, callback){
+  console.log('checking url');
+  exports.readListOfUrls(function(data) {
+    for (var i = 0; i < data.length; i++) {
+      if (url === data[i]) {
+        return callback(true);
+      }
     }
-  })
-  return found;
+    return callback(false);
+  });
+
+
+  // var string = fs.readFileSync(exports.paths.list, 'utf8');
+  // var array = string.split('\n');
+  // var found = false;
+  // _.each(array, function(element, index){
+  //   if (url === element) {
+  //     found = true;
+  //   }
+  // })
+  // return found;
 };
 
 exports.addUrlToList = function(url){
-  if(!exports.isUrlInList()){
-    exports.readListOfUrls(function(data){
-      fs.writeFileSync(exports.paths.list, data.join('\n') + url + '\n');
-    })
-  }
+  if(exports.isUrlInList(url, function(found) {
+    if (!found) {
+      exports.readListOfUrls(function(data){
+        fs.writeFileSync(exports.paths.list, data.join('\n') + url + '\n');
+      });
+    }
+  }));
+
 };
 
 exports.isURLArchived = function(url){
